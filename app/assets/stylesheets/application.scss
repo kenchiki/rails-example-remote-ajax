@@ -7,3 +7,9 @@
 #wrapper {
   @include container();
 }
+.errors {
+  padding: 10px;
+  display: inline-block;
+  background: #ffbbbb;
+  color: #aa0000;
+}

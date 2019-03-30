@@ -7,6 +7,16 @@
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'article_new', 'data-turbolinks-track': 'reload'
   %body
     #wrapper
+      - unless flash.empty?
+        #flash
+        - if notice
+          .alert.alert-success{role: 'alert','data-test': 'flash__success'}
+            = notice
+        - if alert
+          .alert.alert-danger{role: 'alert','data-test': 'flash__failure'}
+            = alert
+
       = yield
