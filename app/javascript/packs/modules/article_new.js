@@ -1,8 +1,4 @@
-import TurbolinksAdapter from 'vue-turbolinks'
-import Vue from 'vue/dist/vue.esm'
-Vue.use(TurbolinksAdapter)
-
-document.addEventListener('turbolinks:load', () => {
+export default (Vue) => {
   new Vue({
     el: '#new_article',
     data: {
@@ -14,4 +10,4 @@ document.addEventListener('turbolinks:load', () => {
       }
     }
   })
-})
+}
