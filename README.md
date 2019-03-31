@@ -15,6 +15,50 @@ vueファイルを作るように書いているのが分かる
 - sshで`ruby ./bin/webpack-dev-server`
 - hamlの表示したい箇所に`= javascript_pack_tag 'hello_vue'`
 
+## remote: trueのイベントをvueで拾う
+
+```ruby
+# controllers/articles_controller.rb
+
+# javascript/packs/modules/article_new.jsがJSONを受け取ってDOMを生成する
+# status: :unprocessable_entityで422が返り、ajax:errorのイベントを捕捉する（remote: trueの仕様）
+render json: @article.errors.full_messages, status: :unprocessable_entity
+```
+
+```haml
+-# articles/_form.html.haml
+
+-# 下記のフォームはid="new_article"が割り当てられる
+= simple_form_for(@article, remote: true, html: {'v-on:ajax:error': 'errors_show'} ) do |f|
+```
+
+```javascript
+// javascript/packs/modules/article_new.js
+
+methods: {
+  errors_show: function (event) {
+    this.errors = event.detail[0];
+    // event.target.querySelector('#article_title').style.backgroundColor = '#ff0000';のようにevent.targetでid="new_article"のDOMのスコープを拾うことができる
+  }
+}
+```
+
+## 自動でJSを読み込む
+
+```javascript
+// javascript/packs/application.js
+
+document.addEventListener('turbolinks:load', () => {
+  function allRequire(context) {
+    context.keys().forEach(function (value) {
+      let obj = context(value);
+      obj.default(Vue)
+    });
+  }
+  allRequire(require.context('./modules/', false, /\.js$/))
+})
+```
+
 ## turbolinksとvueを同時に使う
 
 ### 下記のライブラリが必要になる
