@@ -3,9 +3,9 @@
 - 編集を作るのは大変なので、削除だけできれば良い
 
 ## 導入までの手順
-- Gemfileに`gem 'webpacker', '~> 3.5'`を追記してbundle install
+- Gemfileに`gem 'webpacker', '~> 4.0'`を追記してbundle install
 - `brew install yarn`でyarn導入
-- `bundle exec rails webpacker:install`
+- `bundle exec rails webpacker:install`（rubymineのgenerateでコマンドがなぜか出ないのでterminalから下記を叩く）
 - `bundle exec rails webpacker:install:vue`
 
 上記のコマンドにより`app/javascript/packs`にhello worldファイルが作成される。
@@ -13,7 +13,21 @@
 vueファイルを作るように書いているのが分かる
 
 - sshで`ruby ./bin/webpack-dev-server`
-- hamlの表示したい箇所に`= javascript_pack_tag 'hello_vue'`
+
+```haml
+-#app/views/layouts/application.html.haml
+
+-#app/javascript/packs/application.jsを他のJSまとめるファイルにして他のJSをimport './works'みたいにして束ねて使う
+-#vueのテンプレートを表示する場合はhamlの表示したい箇所に`= javascript_pack_tag 'hello_vue'`
+= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+```
+
+```javascript
+// app/javascript/packs/application.js
+
+// IE対応する場合（参考：https://github.com/rails/webpacker/blob/master/docs/es6.md）
+import "@babel/polyfill"
+```
 
 ## remote: trueのイベントをvueで拾う
 
