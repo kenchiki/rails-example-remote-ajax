@@ -12,7 +12,7 @@
 ちなみに`rails-example-vue-crud\config\webpacker.yml`に`app/javascript/packs`に
 vueファイルを作るように書いているのが分かる
 
-- sshで`ruby ./bin/webpack-dev-server`
+- 開発中はsshで`ruby ./bin/webpack-dev-server`する必要があると思っていたがrails sの状態だったら自動的にコンパイルもしてくれた（webpacker4）
 
 ```haml
 -#app/views/layouts/application.html.haml
@@ -21,6 +21,27 @@ vueファイルを作るように書いているのが分かる
 -#vueのテンプレートを表示する場合はhamlの表示したい箇所に`= javascript_pack_tag 'hello_vue'`
 = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
 ```
+
+## railsの定数などをJSファイルに引っ張る方法
+
+```sh
+bundle exec rails webpacker:install:erb
+```
+
+```javascript
+// app/javascript/packs/works.js.erb
+
+// フィールドの入力数制限
+cocoonAddLimit(jsWorkImages, <%= Work::IMAGE_LIMIT %>);
+```
+
+```javascript
+// app/javascript/packs/application.js
+
+import './works.js.erb'
+```
+
+## IE対応
 
 ```javascript
 // app/javascript/packs/application.js
